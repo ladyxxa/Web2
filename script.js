@@ -1,9 +1,9 @@
 ﻿// Основные переменные
 let tasks = [];
 let dragStartIndex;
-let sortDirection = 'asc'; // 'asc' - от старого к новому, 'desc' - от нового к старому
+let sortDirection = 'asc'; 
 
-// DOM элементы
+
 let todoContainer;
 let sidebar;
 let mainContent;
@@ -26,37 +26,31 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSortButtonText();
 });
 
-// Создание структуры приложения
 function createAppStructure() {
-    // Создаем основной контейнер
+
     todoContainer = document.createElement('div');
     todoContainer.className = 'todo-container';
-    
-    // Создаем боковую панель (белый фон)
+   
     sidebar = document.createElement('div');
     sidebar.className = 'sidebar';
-    
-    // Заголовок боковой панели
+   
     const sidebarTitle = document.createElement('h2');
     sidebarTitle.className = 'sidebar-title';
     sidebarTitle.textContent = 'Управление задачами';
     sidebar.appendChild(sidebarTitle);
     
-    // Боковая панель с фильтрами и поиском
     const sidebarControls = document.createElement('div');
     sidebarControls.className = 'sidebar-controls';
     
-    // Группа фильтров
     const filterGroup = document.createElement('div');
     filterGroup.className = 'filter-group';
     
-    // Поиск
+  
     searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.placeholder = 'Поиск задачи...';
     searchInput.addEventListener('input', filterTasks);
-    
-    // Фильтр по статусу
+  
     filterSelect = document.createElement('select');
     const optionAll = document.createElement('option');
     optionAll.value = 'all';
@@ -85,31 +79,27 @@ function createAppStructure() {
     sidebarControls.appendChild(filterGroup);
     sidebar.appendChild(sidebarControls);
     
-    // Основной контент (белый фон)
     mainContent = document.createElement('div');
     mainContent.className = 'main-content';
     
-    // Создаем заголовок
     const header = document.createElement('h1');
     header.className = 'todo-header';
     header.textContent = 'ToDo-лист';
     mainContent.appendChild(header);
     
-    // Создаем блок управления в основном контенте
     const controls = document.createElement('div');
     controls.className = 'controls';
     
-    // Кнопка добавления задачи
+   
     addTaskBtn = document.createElement('button');
     addTaskBtn.className = 'add-task-btn';
     addTaskBtn.textContent = 'Создать';
     addTaskBtn.addEventListener('click', showTaskInput);
     
-    // Контейнер для ввода задачи
+
     taskInputContainer = document.createElement('div');
     taskInputContainer.className = 'task-input-container';
     
-    // Первая строка - поле ввода задачи
     const taskInputRow = document.createElement('div');
     taskInputRow.className = 'task-input-row';
     
@@ -126,13 +116,13 @@ function createAppStructure() {
     taskInputRow.appendChild(checkboxPlaceholder);
     taskInputRow.appendChild(taskInput);
     
-    // Вторая строка - поле ввода даты
+
     const taskDateRow = document.createElement('div');
     taskDateRow.className = 'task-date-row';
     
     const calendarIcon = document.createElement('span');
     calendarIcon.className = 'calendar-icon';
-    //calendarIcon.innerHTML = '📅';
+
     
     dateInput = document.createElement('input');
     dateInput.type = 'date';
@@ -141,7 +131,6 @@ function createAppStructure() {
     taskDateRow.appendChild(calendarIcon);
     taskDateRow.appendChild(dateInput);
     
-    // Третья строка - кнопки действий
     const taskActionsRow = document.createElement('div');
     taskActionsRow.className = 'task-actions-row';
     
@@ -159,7 +148,7 @@ function createAppStructure() {
     taskActionsRow.appendChild(cancelBtn);
     taskActionsRow.appendChild(saveBtn);
     
-    // Собираем контейнер ввода задачи
+   
     taskInputContainer.appendChild(taskInputRow);
     taskInputContainer.appendChild(taskDateRow);
     taskInputContainer.appendChild(taskActionsRow);
@@ -168,13 +157,12 @@ function createAppStructure() {
     controls.appendChild(taskInputContainer);
     mainContent.appendChild(controls);
     
-    // Создаем список задач
+  
     tasksList = document.createElement('ul');
     tasksList.className = 'tasks-list';
     tasksList.id = 'tasks-list';
     mainContent.appendChild(tasksList);
-    
-    // Создаем блок выполненных задач
+     
     const completedTasks = document.createElement('div');
     completedTasks.className = 'completed-tasks';
     
@@ -199,32 +187,27 @@ function createAppStructure() {
     completedTasks.appendChild(completedList);
     mainContent.appendChild(completedTasks);
     
-    // Собираем все вместе
+   
     todoContainer.appendChild(sidebar);
     todoContainer.appendChild(mainContent);
     
-    // Добавляем контейнер в body
     document.body.appendChild(todoContainer);
 }
 
-// Показать поле ввода задачи
 function showTaskInput() {
     taskInputContainer.classList.add('active');
     taskInput.focus();
     
-    // Устанавливаем дату по умолчанию - сегодня
     const today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
 }
 
-// Скрыть поле ввода задачи
 function hideTaskInput() {
     taskInputContainer.classList.remove('active');
     taskInput.value = '';
     saveBtn.disabled = true;
 }
 
-// Обработка нажатия клавиш в поле ввода задачи
 function handleTaskInputKeydown(e) {
     if (e.key === 'Enter') {
         saveTask();
@@ -233,12 +216,10 @@ function handleTaskInputKeydown(e) {
     }
 }
 
-// Переключение состояния кнопки сохранения
 function toggleSaveButton() {
     saveBtn.disabled = taskInput.value.trim() === '';
 }
 
-// Сохранение задачи
 function saveTask() {
     const text = taskInput.value.trim();
     const date = dateInput.value;
@@ -261,19 +242,16 @@ function saveTask() {
     hideTaskInput();
 }
 
-// Удаление задачи
 function deleteTask(id) {
     tasks = tasks.filter(task => task.id !== id);
     saveTasksToStorage();
     renderTasks();
 }
 
-// Редактирование задачи
 function editTask(id) {
     const task = tasks.find(task => task.id === id);
     if (!task) return;
     
-    // Создаем модальное окно для редактирования
     const editModal = document.createElement('div');
     editModal.className = 'edit-modal';
     editModal.style.cssText = `
@@ -390,14 +368,12 @@ function editTask(id) {
         document.body.removeChild(editModal);
     });
     
-    // Закрытие по клику на фон
     editModal.addEventListener('click', (e) => {
         if (e.target === editModal) {
             document.body.removeChild(editModal);
         }
     });
     
-    // Закрытие по Escape
     const handleKeydown = (e) => {
         if (e.key === 'Escape') {
             document.body.removeChild(editModal);
@@ -406,7 +382,6 @@ function editTask(id) {
     };
     document.addEventListener('keydown', handleKeydown);
     
-    // Собираем модальное окно
     buttonContainer.appendChild(cancelBtn);
     buttonContainer.appendChild(saveBtn);
     
@@ -420,12 +395,10 @@ function editTask(id) {
     editModal.appendChild(editContent);
     document.body.appendChild(editModal);
     
-    // Фокусируемся на поле ввода
     textInput.focus();
     textInput.select();
 }
 
-// Отметка задачи как выполненной
 function toggleTaskCompletion(id) {
     const task = tasks.find(task => task.id === id);
     if (task) {
@@ -435,7 +408,6 @@ function toggleTaskCompletion(id) {
     }
 }
 
-// Сортировка задач по дате с переключением направления
 function sortTasksByDate() {
     if (sortDirection === 'asc') {
         // От нового к старому
@@ -451,7 +423,6 @@ function sortTasksByDate() {
     updateSortButtonText();
 }
 
-// Обновление текста кнопки сортировки
 function updateSortButtonText() {
     if (sortButton) {
         if (sortDirection === 'asc') {
@@ -462,17 +433,14 @@ function updateSortButtonText() {
     }
 }
 
-// Фильтрация и поиск задач
 function filterTasks() {
     renderTasks();
 }
 
-// Переключение видимости выполненных задач
 function toggleCompletedTasks() {
     completedList.classList.toggle('expanded');
 }
 
-// Drag and Drop функциональность
 function handleDragStart(e) {
     dragStartIndex = +this.closest('li').getAttribute('data-id');
     e.dataTransfer.effectAllowed = 'move';
@@ -509,16 +477,14 @@ function handleDrop(e) {
     const dragEndIndex = +this.closest('li').getAttribute('data-id');
     
     if (dragStartIndex !== dragEndIndex) {
-        // Находим задачи по их ID
+     
         const draggedTaskIndex = tasks.findIndex(task => task.id === dragStartIndex);
         const targetTaskIndex = tasks.findIndex(task => task.id === dragEndIndex);
         
         if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
-            // Удаляем задачу из старой позиции и вставляем в новую
             const [draggedTask] = tasks.splice(draggedTaskIndex, 1);
             tasks.splice(targetTaskIndex, 0, draggedTask);
             
-            // Обновляем порядок
             tasks.forEach((task, index) => {
                 task.order = index;
             });
@@ -538,7 +504,6 @@ function handleDragEnd() {
     });
 }
 
-// Вспомогательная функция для определения позиции при перетаскивании
 function getDragAfterElement(container, y) {
     const draggableElements = [...container.querySelectorAll('.task-item:not(.dragging)')];
     
@@ -554,13 +519,10 @@ function getDragAfterElement(container, y) {
     }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
-// Рендеринг задач
 function renderTasks() {
-    // Очищаем списки
     tasksList.innerHTML = '';
     completedList.innerHTML = '';
     
-    // Фильтруем задачи
     const searchText = searchInput.value.toLowerCase();
     const filterValue = filterSelect.value;
     
@@ -574,11 +536,9 @@ function renderTasks() {
         return matchesSearch && matchesFilter;
     });
     
-    // Разделяем задачи на активные и выполненные
     const activeTasks = filteredTasks.filter(task => !task.completed);
     const completedTasks = filteredTasks.filter(task => task.completed);
     
-    // Рендерим активные задачи
     if (activeTasks.length === 0) {
         const emptyMessage = document.createElement('li');
         emptyMessage.className = 'empty-message';
@@ -591,7 +551,6 @@ function renderTasks() {
         });
     }
     
-    // Рендерим выполненные задачи
     if (completedTasks.length === 0) {
         const emptyMessage = document.createElement('li');
         emptyMessage.className = 'empty-message';
@@ -604,11 +563,9 @@ function renderTasks() {
         });
     }
     
-    // Добавляем обработчики drag and drop после рендеринга
     addDragAndDropHandlers();
 }
 
-// Добавление обработчиков drag and drop
 function addDragAndDropHandlers() {
     const taskItems = document.querySelectorAll('.task-item');
     
@@ -622,19 +579,16 @@ function addDragAndDropHandlers() {
     });
 }
 
-// Создание элемента задачи
 function createTaskElement(task, index) {
     const taskItem = document.createElement('li');
     taskItem.className = 'task-item';
     taskItem.setAttribute('data-id', task.id);
     taskItem.setAttribute('draggable', true);
     
-    // Чекбокс
     const checkbox = document.createElement('div');
     checkbox.className = `task-checkbox ${task.completed ? 'checked' : ''}`;
     checkbox.addEventListener('click', () => toggleTaskCompletion(task.id));
     
-    // Контент задачи
     const taskContent = document.createElement('div');
     taskContent.className = 'task-content';
     
@@ -649,7 +603,6 @@ function createTaskElement(task, index) {
     taskContent.appendChild(taskText);
     taskContent.appendChild(taskDate);
     
-    // Действия с задачей
     const taskActions = document.createElement('div');
     taskActions.className = 'task-actions';
     
@@ -664,7 +617,6 @@ function createTaskElement(task, index) {
     taskActions.appendChild(editButton);
     taskActions.appendChild(deleteButton);
     
-    // Собираем элемент
     taskItem.appendChild(checkbox);
     taskItem.appendChild(taskContent);
     taskItem.appendChild(taskActions);
@@ -672,18 +624,15 @@ function createTaskElement(task, index) {
     return taskItem;
 }
 
-// Форматирование даты
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('ru-RU');
 }
 
-// Сохранение задач в localStorage
 function saveTasksToStorage() {
     localStorage.setItem('todoTasks', JSON.stringify(tasks));
 }
 
-// Загрузка задач из localStorage
 function loadTasksFromStorage() {
     const storedTasks = localStorage.getItem('todoTasks');
     if (storedTasks) {
