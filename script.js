@@ -3,7 +3,6 @@ let tasks = [];
 let dragStartIndex;
 let sortDirection = 'asc'; 
 
-
 let todoContainer;
 let sidebar;
 let mainContent;
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function createAppStructure() {
-
     todoContainer = document.createElement('div');
     todoContainer.className = 'todo-container';
    
@@ -45,7 +43,6 @@ function createAppStructure() {
     const filterGroup = document.createElement('div');
     filterGroup.className = 'filter-group';
     
-  
     searchInput = document.createElement('input');
     searchInput.type = 'text';
     searchInput.placeholder = 'Поиск задачи...';
@@ -89,14 +86,12 @@ function createAppStructure() {
     
     const controls = document.createElement('div');
     controls.className = 'controls';
-    
    
     addTaskBtn = document.createElement('button');
     addTaskBtn.className = 'add-task-btn';
     addTaskBtn.textContent = 'Создать';
     addTaskBtn.addEventListener('click', showTaskInput);
     
-
     taskInputContainer = document.createElement('div');
     taskInputContainer.className = 'task-input-container';
     
@@ -116,13 +111,11 @@ function createAppStructure() {
     taskInputRow.appendChild(checkboxPlaceholder);
     taskInputRow.appendChild(taskInput);
     
-
     const taskDateRow = document.createElement('div');
     taskDateRow.className = 'task-date-row';
     
     const calendarIcon = document.createElement('span');
     calendarIcon.className = 'calendar-icon';
-
     
     dateInput = document.createElement('input');
     dateInput.type = 'date';
@@ -147,7 +140,6 @@ function createAppStructure() {
     
     taskActionsRow.appendChild(cancelBtn);
     taskActionsRow.appendChild(saveBtn);
-    
    
     taskInputContainer.appendChild(taskInputRow);
     taskInputContainer.appendChild(taskDateRow);
@@ -157,7 +149,6 @@ function createAppStructure() {
     controls.appendChild(taskInputContainer);
     mainContent.appendChild(controls);
     
-  
     tasksList = document.createElement('ul');
     tasksList.className = 'tasks-list';
     tasksList.id = 'tasks-list';
@@ -187,7 +178,6 @@ function createAppStructure() {
     completedTasks.appendChild(completedList);
     mainContent.appendChild(completedTasks);
     
-   
     todoContainer.appendChild(sidebar);
     todoContainer.appendChild(mainContent);
     
@@ -477,7 +467,6 @@ function handleDrop(e) {
     const dragEndIndex = +this.closest('li').getAttribute('data-id');
     
     if (dragStartIndex !== dragEndIndex) {
-     
         const draggedTaskIndex = tasks.findIndex(task => task.id === dragStartIndex);
         const targetTaskIndex = tasks.findIndex(task => task.id === dragEndIndex);
         
@@ -520,8 +509,13 @@ function getDragAfterElement(container, y) {
 }
 
 function renderTasks() {
-    tasksList.innerHTML = '';
-    completedList.innerHTML = '';
+    // Очищаем списки через removeChild
+    while (tasksList.firstChild) {
+        tasksList.removeChild(tasksList.firstChild);
+    }
+    while (completedList.firstChild) {
+        completedList.removeChild(completedList.firstChild);
+    }
     
     const searchText = searchInput.value.toLowerCase();
     const filterValue = filterSelect.value;
